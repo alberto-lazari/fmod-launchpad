@@ -1,0 +1,8 @@
+[attr]lfs filter=lfs diff=lfs merge=lfs -text
+
+# Lib binaries
+*.dll lfs
+*.dylib lfs
+
+# Audio files
+*.wav lfs
