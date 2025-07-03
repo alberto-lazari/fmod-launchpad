@@ -8,9 +8,10 @@ BIN_DIR := $(BUILD_DIR)/bin
 OBJ_DIR := $(BUILD_DIR)/obj
 FMOD_DIR := fmod/core
 
+# Executable
 PROJ := launchpad
 EXE := $(BIN_DIR)/$(PROJ)
-MAIN_SRC := $(SRC_DIR)/$(PROJ).cpp
+MAIN_SRC := $(SRC_DIR)/main.cpp
 
 # Source & Headers
 SRC := $(patsubst $(MAIN_SRC),,$(wildcard $(SRC_DIR)/*.cpp))
@@ -25,6 +26,9 @@ LDFLAGS := -L$(FMOD_DIR)/lib -lfmod -Wl,-rpath,$(FMOD_DIR)/lib
 DEPS := $(OBJ:.o=.d)
 
 # Default target
+exe: $(EXE)
+
+# Compile executable
 $(EXE): $(MAIN_SRC) $(OBJ) | $(BIN_DIR)
 	@"$(CXX)" $(CXXFLAGS) $(OBJ) "$<" -o "$@" $(LDFLAGS)
 
@@ -36,10 +40,6 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
 # Create necessary directories
 $(BUILD_DIR) $(BIN_DIR) $(OBJ_DIR):
 	@mkdir -p "$@"
-
-run: $(EXE)
-	@printf "$(PROJ)> "
-	@./"$(EXE)"
 
 # Clean rule
 clean:
