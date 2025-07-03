@@ -3,12 +3,11 @@
 
 int main()
 {
-    Launchpad launchpad(
-        {
-            { 'v', { .path = "verse-strum-loop.wav", .name = "Verse strum [loop]", .loop = true } },
-        },
-        {}
-    );
+    std::map<char, Sound::Params> sounds
+    {
+        { 'v', { .name = "Verse strum [loop]", .path = "verse-strum-loop.wav", .loop = true } },
+    };
+    Launchpad launchpad(sounds, {});
 
     launchpad.mainLoop();
 
