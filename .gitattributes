@@ -3,6 +3,9 @@
 # Lib binaries
 *.dll lfs
 *.dylib lfs
+*.so lfs
+*.lib lfs
+*.a lfs
 
 # Audio files
 *.wav lfs
