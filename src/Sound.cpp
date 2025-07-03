@@ -49,7 +49,7 @@ Sound& Sound::operator=(Sound&& other) noexcept
     if (this != &other)
     {
         // Release existing sound if it already owns one
-        if (sound)
+        if (sound != nullptr)
         {
             sound->release();
         }
