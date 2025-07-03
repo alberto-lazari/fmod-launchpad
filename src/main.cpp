@@ -1,9 +1,14 @@
 #include "Launchpad.h"
+#include "Sound.h"
 
 int main()
 {
-    Launchpad launchpad;
-    launchpad.addSound('v', "audio/verse-strum-loop.wav");
+    Launchpad launchpad(
+        {
+            { 'v', { .path = "verse-strum-loop.wav", .name = "Verse strum [loop]", .loop = true } },
+        },
+        {}
+    );
 
     launchpad.mainLoop();
 

@@ -2,4 +2,4 @@
 
 #include "fmod.hpp"
 
-void Guard(FMOD_RESULT rc);
+bool Guard(FMOD_RESULT rc);
