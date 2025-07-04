@@ -36,6 +36,8 @@ Launchpad::Launchpad(
 
 Launchpad::~Launchpad()
 {
+    // Ensure all channels are stopped and system resource is released
+    Guard(masterGroup->stop());
     Guard(system->release());
 }
 

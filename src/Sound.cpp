@@ -49,7 +49,7 @@ Sound& Sound::operator=(Sound&& other) noexcept
         // Release existing sound if it already owns one
         if (sound)
         {
-            sound->release();
+            Guard(sound->release());
         }
 
         name = std::move(other.name);
@@ -67,7 +67,7 @@ Sound::~Sound()
 {
     if (sound)
     {
-        sound->release();
+        Guard(sound->release());
     }
 }
 
@@ -76,18 +76,23 @@ void Sound::play(FMOD::ChannelGroup* i_group)
 {
     if (!sound) return;
 
-    if (channel)
+    if (isPlaying())
     {
         // If sound is already playing stop it and restart. Do not spawn multiple instances
-        bool isPlaying = false;
-        FMOD_RESULT rc = channel->isPlaying(&isPlaying);
-        if (rc == FMOD_OK && isPlaying)
-        {
-            Guard(channel->stop());
-        }
+        Guard(channel->stop());
     }
 
     Guard(system->playSound(sound, i_group, false, &channel));
+}
+
+bool Sound::isPlaying()
+{
+    if (!channel) return false;
+
+    bool isPlaying = false;
+    if ((channel->isPlaying(&isPlaying)) != FMOD_OK) return false;
+
+    return isPlaying;
 }
 
 FMOD_MODE Sound::makeMode(const Params& i_params)
