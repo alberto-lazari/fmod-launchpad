@@ -45,4 +45,7 @@ public:
 
 
     void play(FMOD::ChannelGroup* group);
+
+private:
+    static FMOD_MODE makeMode(const Params& params);
 };

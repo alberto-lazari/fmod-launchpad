@@ -26,9 +26,7 @@ Sound::Sound(FMOD::System* i_system, const Params& i_params)
         i_system,
         i_params.path,
         i_params.name,
-        FMOD_DEFAULT
-        | (i_params.loop ? FMOD_LOOP_NORMAL : FMOD_DEFAULT)
-        | (i_params.stream ? FMOD_CREATESTREAM : FMOD_DEFAULT)
+        makeMode(i_params)
     )
 {
 }
@@ -84,4 +82,14 @@ void Sound::play(FMOD::ChannelGroup* i_group)
     }
 
     Guard(system->playSound(sound, i_group, false, &channel));
+}
+
+FMOD_MODE Sound::makeMode(const Params& i_params)
+{
+    FMOD_MODE mode = FMOD_DEFAULT;
+
+    if (i_params.loop) mode |= FMOD_LOOP_NORMAL;
+    if (i_params.stream) mode |= FMOD_CREATESTREAM;
+
+    return mode;
 }
