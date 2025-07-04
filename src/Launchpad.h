@@ -23,11 +23,12 @@ public:
     );
     ~Launchpad();
 
-    void playSound(char key);
-    void addSound(char key, const char* path);
-
     void mainLoop();
+
+    void playSound(char key);
 
 private:
     static FMOD::System* System_Init();
+
+    std::string getGroupName(FMOD::ChannelGroup* group);
 };

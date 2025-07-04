@@ -12,12 +12,12 @@ Sound::Sound(
 {
     FMOD_RESULT rc;
     // Search file in default audio assets directory
-    rc = system->createSound((AudioDir + i_path).c_str(), i_mode, nullptr, &sound);
+    rc = system->createSound((AudioDir + i_path).data(), i_mode, nullptr, &sound);
 
     if (rc == FMOD_ERR_FILE_NOTFOUND)
     {
         // Search file using absolute path
-        Guard(system->createSound(i_path.c_str(), i_mode, nullptr, &sound));
+        Guard(system->createSound(i_path.data(), i_mode, nullptr, &sound));
     }
 }
 
@@ -47,7 +47,7 @@ Sound& Sound::operator=(Sound&& other) noexcept
     if (this != &other)
     {
         // Release existing sound if it already owns one
-        if (sound != nullptr)
+        if (sound)
         {
             sound->release();
         }
@@ -65,7 +65,7 @@ Sound& Sound::operator=(Sound&& other) noexcept
 
 Sound::~Sound()
 {
-    if (sound != nullptr)
+    if (sound)
     {
         sound->release();
     }
@@ -74,11 +74,17 @@ Sound::~Sound()
 
 void Sound::play(FMOD::ChannelGroup* i_group)
 {
-    // If sound is already playing stop it and restart. Do not spawn multiple instances
-    bool isPlaying = false;
-    if (channel != nullptr && Guard(channel->isPlaying(&isPlaying)) && isPlaying)
+    if (!sound) return;
+
+    if (channel)
     {
-        channel->stop();
+        // If sound is already playing stop it and restart. Do not spawn multiple instances
+        bool isPlaying = false;
+        FMOD_RESULT rc = channel->isPlaying(&isPlaying);
+        if (rc == FMOD_OK && isPlaying)
+        {
+            Guard(channel->stop());
+        }
     }
 
     Guard(system->playSound(sound, i_group, false, &channel));
