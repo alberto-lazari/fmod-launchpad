@@ -3,9 +3,6 @@
 #include "common.h"
 #include "tui.h"
 
-#include <iostream>
-#include <format>
-
 Launchpad::Launchpad() : Launchpad({}, {})
 {
 }
@@ -36,35 +33,29 @@ Launchpad::Launchpad(
 
 Launchpad::~Launchpad()
 {
-    // Ensure all channels are stopped and system resource is released
-    Guard(masterGroup->stop());
+    // Destroy all sounds before closing system
+    sounds.clear();
     Guard(system->release());
 }
 
 void Launchpad::mainLoop()
 {
-    std::cout << std::format("Group  < {} >\n", getGroupName(selectedGroup));
-
     char key;
     while ((key = getch()) != KEY_QUIT)
     {
         switch (key)
         {
             case KEY_MUTE:
-                bool isMuted;
-                Guard(selectedGroup->getMute(&isMuted));
-                Guard(selectedGroup->setMute(!isMuted));
+                muteGroup(selectedGroup);
                 break;
             case KEY_PLAY_PAUSE:
-                bool isPaused;
-                Guard(masterGroup->getPaused(&isPaused));
-                Guard(masterGroup->setPaused(!isPaused));
+                togglePlayPause();
                 break;
             case KEY_STOP:
-                Guard(masterGroup->stop());
+                stopGroup(selectedGroup);
                 break;
             default:
-                playSound(key);
+                playSound(key, selectedGroup);
                 break;
         }
     }
@@ -83,13 +74,34 @@ void Launchpad::addGroup(const std::string& i_name)
     groups.push_back(group);
 }
 
-void Launchpad::playSound(char i_key)
+void Launchpad::muteGroup(FMOD::ChannelGroup* i_group)
 {
-    if (sounds.contains(i_key))
-    {
-        sounds.at(i_key)
-            .play(selectedGroup);
-    }
+    if (!i_group) return;
+
+    bool isMuted;
+    Guard(i_group->getMute(&isMuted));
+    Guard(i_group->setMute(!isMuted));
+}
+
+void Launchpad::stopGroup(FMOD::ChannelGroup* i_group)
+{
+    if (!i_group) return;
+
+    Guard(i_group->stop());
+}
+
+void Launchpad::playSound(char i_key, FMOD::ChannelGroup* i_group)
+{
+    if (!sounds.contains(i_key)) return;
+
+    sounds.at(i_key).play(i_group);
+}
+
+void Launchpad::togglePlayPause()
+{
+    bool isPaused;
+    Guard(masterGroup->getPaused(&isPaused));
+    Guard(masterGroup->setPaused(!isPaused));
 }
 
 
@@ -104,7 +116,9 @@ FMOD::System* Launchpad::System_Init()
 
 std::string Launchpad::getGroupName(FMOD::ChannelGroup* i_group)
 {
-    char name[1024];
+    if (!i_group) return "[null]";
+
+    char name[256];
     Guard(i_group->getName(name, sizeof(name)));
     return i_group == masterGroup ? "Master" : name;
 }

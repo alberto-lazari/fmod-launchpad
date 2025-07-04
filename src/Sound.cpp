@@ -47,10 +47,8 @@ Sound& Sound::operator=(Sound&& other) noexcept
     if (this != &other)
     {
         // Release existing sound if it already owns one
-        if (sound)
-        {
-            Guard(sound->release());
-        }
+        if (channel) channel->stop();
+        if (sound) Guard(sound->release());
 
         name = std::move(other.name);
         system = other.system;
@@ -65,12 +63,46 @@ Sound& Sound::operator=(Sound&& other) noexcept
 
 Sound::~Sound()
 {
-    if (sound)
-    {
-        Guard(sound->release());
-    }
+    if (channel) channel->stop();
+    if (sound) Guard(sound->release());
 }
 
+
+std::string Sound::getName()
+{
+    std::string fullName = name;
+    if (isLoop()) fullName += " [L]";
+    if (isStream()) fullName += " [S]";
+    return fullName;
+}
+
+bool Sound::isPlaying()
+{
+    if (!channel) return false;
+
+    bool isPlaying = false;
+    if ((channel->isPlaying(&isPlaying)) != FMOD_OK) return false;
+
+    return isPlaying;
+}
+
+bool Sound::isLoop()
+{
+    if (!sound) return false;
+
+    FMOD_MODE mode;
+    Guard(sound->getMode(&mode));
+    return mode & FMOD_LOOP_NORMAL;
+}
+
+bool Sound::isStream()
+{
+    if (!sound) return false;
+
+    FMOD_MODE mode;
+    Guard(sound->getMode(&mode));
+    return mode & FMOD_CREATESTREAM;
+}
 
 void Sound::play(FMOD::ChannelGroup* i_group)
 {
@@ -85,15 +117,6 @@ void Sound::play(FMOD::ChannelGroup* i_group)
     Guard(system->playSound(sound, i_group, false, &channel));
 }
 
-bool Sound::isPlaying()
-{
-    if (!channel) return false;
-
-    bool isPlaying = false;
-    if ((channel->isPlaying(&isPlaying)) != FMOD_OK) return false;
-
-    return isPlaying;
-}
 
 FMOD_MODE Sound::makeMode(const Params& i_params)
 {

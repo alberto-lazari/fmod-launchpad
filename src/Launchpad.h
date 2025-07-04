@@ -29,7 +29,10 @@ public:
     void addSound(char key, const Sound::Params& params);
     void addGroup(const std::string& name);
 
-    void playSound(char key);
+    void muteGroup(FMOD::ChannelGroup* group);
+    void stopGroup(FMOD::ChannelGroup* group);
+    void playSound(char key, FMOD::ChannelGroup* group);
+    void togglePlayPause();
 
 private:
     static FMOD::System* System_Init();

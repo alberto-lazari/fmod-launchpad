@@ -5,10 +5,10 @@ int main()
 {
     std::map<char, Sound::Params> sounds
     {
-        { 'd', { .name = "Drums [L]", .path = "drums-loop.wav", .loop = true } },
-        { 'b', { .name = "Bass drums [L]", .path = "bass-drums-loop.wav", .loop = true } },
-        { 'v', { .name = "Verse strum [L]", .path = "verse-strum-loop.wav", .loop = true } },
-        { 'c', { .name = "Chorus strum [L]", .path = "chorus-strum-loop.wav", .loop = true } },
+        { 'd', { .name = "Drums", .path = "drums-loop.wav", .loop = true } },
+        { 'b', { .name = "Bass drums", .path = "bass-drums-loop.wav", .loop = true } },
+        { 'v', { .name = "Verse strum", .path = "verse-strum-loop.wav", .loop = true } },
+        { 'c', { .name = "Chorus strum", .path = "chorus-strum-loop.wav", .loop = true } },
 
         { 'i', { .name = "Drums intro", .path = "drums-intro.wav" } },
         { 'g', { .name = "Guitar intro", .path = "guitar-intro.wav" } },
@@ -19,7 +19,7 @@ int main()
         { 's', { .name = "Chorus fill straight", .path = "chorus-fill-straight.wav" } },
         { 'o', { .name = "Guitar solo", .path = "guitar-solo.wav" } },
 
-        { 'f', { .name = "Full mix [S]", .path = "dreams-instrumental.wav", .stream = true } },
+        { 'f', { .name = "Full mix", .path = "dreams-instrumental.wav", .stream = true } },
     };
     std::vector<std::string> groups
     {

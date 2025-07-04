@@ -43,10 +43,12 @@ public:
     // Release owned resource
     ~Sound();
 
+    std::string getName();
+    bool isPlaying();
+    bool isLoop();
+    bool isStream();
 
     void play(FMOD::ChannelGroup* group);
-
-    bool isPlaying();
 
 private:
     static FMOD_MODE makeMode(const Params& params);
