@@ -12,12 +12,12 @@ Sound::Sound(
 {
     FMOD_RESULT rc;
     // Search file in default audio assets directory
-    rc = system->createSound((AudioDir + i_path).data(), i_mode, nullptr, &sound);
+    rc = system->createSound((AudioDir + i_path).c_str(), i_mode, nullptr, &sound);
 
     if (rc == FMOD_ERR_FILE_NOTFOUND)
     {
         // Search file using absolute path
-        Guard(system->createSound(i_path.data(), i_mode, nullptr, &sound));
+        Guard(system->createSound(i_path.c_str(), i_mode, nullptr, &sound));
     }
 }
 

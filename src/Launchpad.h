@@ -5,6 +5,7 @@
 
 #include <map>
 #include <vector>
+#include <string>
 
 class Launchpad
 {
@@ -19,11 +20,14 @@ public:
     Launchpad();
     Launchpad(
         const std::map<char, Sound::Params>& sounds,
-        const std::vector<FMOD::ChannelGroup*>& channels
+        const std::vector<std::string>& channels
     );
     ~Launchpad();
 
     void mainLoop();
+
+    void addSound(char key, const Sound::Params& params);
+    void addGroup(const std::string& name);
 
     void playSound(char key);
 
