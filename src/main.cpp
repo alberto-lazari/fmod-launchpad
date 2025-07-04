@@ -19,7 +19,7 @@ int main()
         { 's', { .name = "Chorus fill straight", .path = "chorus-fill-straight.wav" } },
         { 'o', { .name = "Guitar solo", .path = "guitar-solo.wav" } },
 
-        { 'f', { .name = "Full mix", .path = "dreams-instrumental.wav", .stream = true } },
+        { 'f', { .name = "Full mix [S]", .path = "dreams-instrumental.wav", .stream = true } },
     };
     std::vector<std::string> groups
     {
