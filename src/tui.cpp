@@ -23,3 +23,22 @@
         return c;
     }
 #endif
+
+
+Key::Key(char c)
+    : value(fromChar(c))
+    , keyChar(c)
+{
+}
+
+Key::EnumType Key::fromChar(char c)
+{
+    switch (c)
+    {
+        case 'M': return Mute;
+        case ' ': return PlayPause;
+        case 'Q': return Quit;
+        case 'S': return Stop;
+        default:  return isSoundKey(c) ? PlaySound : Other;
+    }
+}
