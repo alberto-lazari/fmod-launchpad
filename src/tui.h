@@ -6,12 +6,12 @@ struct Key
 {
     enum EnumType
     {
-        Mute,
-        PlayPause,
-        Quit,
-        Stop,
-        PlaySound,
-        Other,
+        MUTE,
+        PLAY_PAUSE,
+        QUIT,
+        STOP,
+        PLAY_SOUND,
+        OTHER,
     };
 
     Key(char keyChar);

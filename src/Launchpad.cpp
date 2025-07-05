@@ -40,26 +40,25 @@ Launchpad::~Launchpad()
 
 void Launchpad::mainLoop()
 {
-    Key key = getch();
-    do
+    Key key = '\0';
+    while ((key = getch()) != Key::QUIT)
     {
         switch (key)
         {
-            case Key::Mute:
+            case Key::MUTE:
                 muteGroup(selectedGroup);
                 break;
-            case Key::PlayPause:
+            case Key::PLAY_PAUSE:
                 togglePlayPause();
                 break;
-            case Key::Stop:
+            case Key::STOP:
                 stopGroup(selectedGroup);
                 break;
             default:
                 playSound(key.keyChar, selectedGroup);
                 break;
         }
-
-    } while ((key = getch()) != Key::Quit);
+    }
 }
 
 void Launchpad::addSound(char i_key, const Sound::Params& i_params)

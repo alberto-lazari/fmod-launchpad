@@ -35,10 +35,10 @@ Key::EnumType Key::fromChar(char c)
 {
     switch (c)
     {
-        case 'M': return Mute;
-        case ' ': return PlayPause;
-        case 'Q': return Quit;
-        case 'S': return Stop;
-        default:  return isSoundKey(c) ? PlaySound : Other;
+        case 'M': return MUTE;
+        case ' ': return PLAY_PAUSE;
+        case 'Q': return QUIT;
+        case 'S': return STOP;
+        default:  return isSoundKey(c) ? PLAY_SOUND : OTHER;
     }
 }
