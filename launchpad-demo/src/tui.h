@@ -65,5 +65,11 @@ public:
 };
 
 char getch();
-
 Key getKey();
+
+void initScreen();
+void clearScreen();
+void hideCursor();
+void showCursor();
+
+void printHelp();

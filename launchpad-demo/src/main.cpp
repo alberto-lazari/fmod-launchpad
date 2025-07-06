@@ -29,8 +29,12 @@ int main()
         "Rythm guitar",
         "Lead guitar",
     };
-    std::cout << "//// Launchpad startup... ////" << std::endl;
+
+    initScreen();
+    std::cout << "Loading.." << std::endl;
     Launchpad launchpad(sounds, groups);
+    clearScreen();
+    std::cout << "/// Launchpad ///" << std::endl;
 
     Key key;
     while ((key = getKey()) != Key::QUIT)
@@ -63,6 +67,9 @@ int main()
                 break;
             case Key::PAN_RIGHT:
                 launchpad.groupPanRight();
+                break;
+            case Key::HELP:
+                printHelp();
                 break;
             default:
                 launchpad.playSound(key.keyChar);

@@ -1,5 +1,16 @@
 #include "tui.h"
 
+#include <iostream>
+#include <format>
+
+#ifdef _WIN32
+    #include <conio.h>
+    #include <windows.h>
+#else
+    #include <termios.h>
+    #include <unistd.h>
+#endif
+
 Key::Key()
     : Key(CHAR_NULL)
 {
@@ -55,29 +66,22 @@ Key::EnumType Key::FromChar(char c)
     }
 }
 
+char getch()
+{
 #ifdef _WIN32
-    #include <conio.h>
-    char getch()
-    {
-        return _getch();
-    }
+    return _getch();
 #else
-    #include <termios.h>
-    #include <unistd.h>
-
-    char getch()
-    {
-        termios oldt, newt;
-        char c;
-        tcgetattr(STDIN_FILENO, &oldt);
-        newt = oldt;
-        newt.c_lflag &= ~(ICANON | ECHO);
-        tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-        read(STDIN_FILENO, &c, 1);
-        tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-        return c;
-    }
+    termios oldt, newt;
+    char c;
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    read(STDIN_FILENO, &c, 1);
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    return c;
 #endif
+}
 
 Key getKey()
 {
@@ -88,10 +92,65 @@ Key getKey()
     if (getch() != '[') return Key::OTHER;
     switch(getch())
     {
-        case Key::CHAR_UP_ARROW: return Key::NEXT_GROUP;
-        case Key::CHAR_DOWN_ARROW: return Key::PREV_GROUP;
+        case Key::CHAR_DOWN_ARROW: return Key::NEXT_GROUP;
+        case Key::CHAR_UP_ARROW: return Key::PREV_GROUP;
         case Key::CHAR_LEFT_ARROW: return Key::PAN_LEFT;
         case Key::CHAR_RIGHT_ARROW: return Key::PAN_RIGHT;
         default: return Key::OTHER;
     }
+}
+
+
+// Clear display, moving current line on top and move cursor to home position
+void initScreen()
+{
+#ifdef _WIN32
+    // Enable ANSI codes support on Windows
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    DWORD dwMode = 0;
+    GetConsoleMode(hOut, &dwMode);
+    dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+    SetConsoleMode(hOut, dwMode);
+#endif
+    std::cout << "\033[2J\033[H" << std::flush;
+}
+
+// Move cursor to home position and clear all lines below
+void clearScreen()
+{
+    std::cout << "\033[H\033[J" << std::flush;
+}
+
+void hideCursor()
+{
+    std::cout << "\033[?25l" << std::flush;
+}
+
+void showCursor()
+{
+    std::cout << "\033[?25h" << std::flush;
+}
+
+
+void printHelp()
+{
+    hideCursor();
+    clearScreen();
+
+    std::cout
+        << "Available commands:\n"
+        << "a-z0-9   Play a sound\n"
+        << "Space    Play/Pause Master channel\n"
+        << std::format("{}/Down   Select next channel\n", Key::CHAR_NEXT_GROUP)
+        << std::format("{}/Up     Select previous channel\n", Key::CHAR_PREV_GROUP)
+        << std::format("{}        Increment current channel volume\n", Key::CHAR_VOLUME_UP)
+        << std::format("{}        Decrement current channel volume\n", Key::CHAR_VOLUME_DOWN)
+        << std::format("{}        Mute current channel\n", Key::CHAR_MUTE)
+        << std::format("{}        Stop current channel\n", Key::CHAR_STOP)
+        << std::format("{}/Left   Pan current channel to left\n", Key::CHAR_PAN_LEFT)
+        << std::format("{}/Right  Pan current channel to right\n", Key::CHAR_PAN_RIGHT)
+        << std::format("{}        Quit\n", Key::CHAR_QUIT)
+        << std::format("{}        Show this message\n", Key::CHAR_HELP);
+
+    showCursor();
 }
