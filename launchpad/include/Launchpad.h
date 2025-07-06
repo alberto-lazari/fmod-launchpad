@@ -12,6 +12,8 @@ class Launchpad
 {
 private:
     std::map<char, Sound> sounds;
+    // Keep original sound insertion order
+    std::vector<char> soundKeys;
     std::vector<Group> groups;
     FMOD::System* system {};
     size_t currentGroupIndex = 0;
@@ -19,7 +21,7 @@ private:
 public:
     Launchpad();
     Launchpad(
-        const std::map<char, Sound::Params>& sounds,
+        const std::vector<std::pair<char, Sound::Params>>& sounds,
         const std::vector<std::string>& groupNames
     );
     ~Launchpad();

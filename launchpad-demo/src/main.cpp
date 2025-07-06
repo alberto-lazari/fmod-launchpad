@@ -61,7 +61,7 @@ void mainLoop(Launchpad& launchpad)
 
 int main()
 {
-    std::map<char, Sound::Params> sounds
+    std::vector<std::pair<char, Sound::Params>> sounds
     {
         { 'd', { .name = "Drums", .path = "drums-loop.wav", .loop = true } },
         { 'b', { .name = "Bass drums", .path = "bass-drums-loop.wav", .loop = true } },

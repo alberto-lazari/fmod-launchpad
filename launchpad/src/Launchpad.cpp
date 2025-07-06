@@ -9,7 +9,7 @@ Launchpad::Launchpad() : Launchpad({}, {})
 }
 
 Launchpad::Launchpad(
-    const std::map<char, Sound::Params>& i_sounds,
+    const std::vector<std::pair<char, Sound::Params>>& i_sounds,
     const std::vector<std::string>& i_groupNames
 )
     : system(SystemInit())
@@ -41,6 +41,7 @@ Launchpad::~Launchpad()
 void Launchpad::addSound(char i_key, const Sound::Params& i_params)
 {
     sounds.insert({ i_key, Sound(system, i_params) });
+    soundKeys.push_back(i_key);
 }
 
 void Launchpad::addGroup(const std::string& i_name)
@@ -97,8 +98,10 @@ void Launchpad::dump()
 
     std::cout << "=================== Sounds ===================\n";
 
-    for (auto& [key, sound] : sounds)
+    for (char key : soundKeys)
     {
+        Sound& sound = sounds.at(key);
+
         std::cout << std::format("{} {}  {}\n",
             sound.isPlaying() ? "~" : " ",
             key,
