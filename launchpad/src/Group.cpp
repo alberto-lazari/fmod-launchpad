@@ -72,18 +72,14 @@ void Group::toggleMute()
 {
     if (!group) return;
 
-    bool isMuted;
-    Guard(group->getMute(&isMuted));
-    Guard(group->setMute(!isMuted));
+    Guard(group->setMute(!isMuted()));
 }
 
 void Group::togglePlayPause()
 {
     if (!group) return;
 
-    bool isPaused;
-    Guard(group->getPaused(&isPaused));
-    Guard(group->setPaused(!isPaused));
+    Guard(group->setPaused(!isPaused()));
 }
 
 void Group::stop()
@@ -104,8 +100,7 @@ void Group::changeVolume(bool i_volumeUp, float i_step)
 {
     if (!group) return;
 
-    float volume;
-    Guard(group->getVolume(&volume));
+    float volume = getVolume();
     volume += i_volumeUp ? i_step : -i_step;
     if (volume < 0.f) volume = 0.f;
 
@@ -132,6 +127,34 @@ std::string Group::getInternalName()
     Guard(group->getName(name, sizeof(name)));
     return name;
 }
+
+bool Group::isMuted()
+{
+    if (!group) return false;
+
+    bool isMuted;
+    Guard(group->getMute(&isMuted));
+    return isMuted;
+}
+
+bool Group::isPaused()
+{
+    if (!group) return false;
+
+    bool isPaused;
+    Guard(group->getPaused(&isPaused));
+    return isPaused;
+}
+
+float Group::getVolume()
+{
+    if (!group) return 0.f;
+
+    float volume;
+    Guard(group->getVolume(&volume));
+    return volume;
+}
+
 
 Group& Group::Master(FMOD::System* i_system)
 {

@@ -52,5 +52,10 @@ public:
     const std::string& getName() const { return name; }
     std::string getInternalName();
 
+    bool isMuted();
+    bool isPaused();
+    float getVolume();
+    float getPanLevel() const { return panLevel; };
+
     static Group& Master(FMOD::System* system);
 };

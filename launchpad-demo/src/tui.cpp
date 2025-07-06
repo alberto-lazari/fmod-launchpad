@@ -138,19 +138,23 @@ void printHelp()
     clearScreen();
 
     std::cout
-        << "Available commands:\n"
-        << "a-z0-9   Play a sound\n"
-        << "Space    Play/Pause Master channel\n"
-        << std::format("{}/Down   Select next channel\n", Key::CHAR_NEXT_GROUP)
-        << std::format("{}/Up     Select previous channel\n", Key::CHAR_PREV_GROUP)
-        << std::format("{}        Increment current channel volume\n", Key::CHAR_VOLUME_UP)
-        << std::format("{}        Decrement current channel volume\n", Key::CHAR_VOLUME_DOWN)
-        << std::format("{}        Mute current channel\n", Key::CHAR_MUTE)
-        << std::format("{}        Stop current channel\n", Key::CHAR_STOP)
-        << std::format("{}/Left   Pan current channel to left\n", Key::CHAR_PAN_LEFT)
-        << std::format("{}/Right  Pan current channel to right\n", Key::CHAR_PAN_RIGHT)
-        << std::format("{}        Quit\n", Key::CHAR_QUIT)
-        << std::format("{}        Show this message\n", Key::CHAR_HELP);
+        << "============= Available Commands =============\n"
+        << "  a-z,0-9    Play a sound\n"
+        << "  Space      Play/Pause Master channel\n"
+        << std::format("  {}/Down     Select next channel\n", Key::CHAR_NEXT_GROUP)
+        << std::format("  {}/Up       Select previous channel\n", Key::CHAR_PREV_GROUP)
+        << std::format("  {}          Increment current channel volume\n", Key::CHAR_VOLUME_UP)
+        << std::format("  {}          Decrement current channel volume\n", Key::CHAR_VOLUME_DOWN)
+        << std::format("  {}          Mute current channel\n", Key::CHAR_MUTE)
+        << std::format("  {}          Stop current channel\n", Key::CHAR_STOP)
+        << std::format("  {}/Left     Pan current channel to left\n", Key::CHAR_PAN_LEFT)
+        << std::format("  {}/Right    Pan current channel to right\n", Key::CHAR_PAN_RIGHT)
+        << std::format("  {}          Quit\n", Key::CHAR_QUIT)
+        << std::format("  {}          Show this message\n", Key::CHAR_HELP)
+        << "==============================================\n"
+        << "    Press any key to go back to Launchpad"
+        << std::endl;
 
     showCursor();
+    getch();
 }

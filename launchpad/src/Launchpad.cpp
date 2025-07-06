@@ -1,6 +1,9 @@
 #include "Launchpad.h"
 #include "common.h"
 
+#include <iostream>
+#include <format>
+
 Launchpad::Launchpad() : Launchpad({}, {})
 {
 }
@@ -69,6 +72,40 @@ Group& Launchpad::previousGroup()
 {
     currentGroupIndex = (currentGroupIndex + groups.size() - 1) % groups.size();
     return getCurrentGroup();
+}
+
+void Launchpad::dump()
+{
+    std::cout << "================== Channels ==================\n";
+
+    for (Group& group : groups)
+    {
+        float panLevel = group.getPanLevel();
+        bool showPan = panLevel < -0.05f || panLevel > 0.05f;
+        std::cout << std::format("{} {:<12s} {} {} vol: {:<3.0f}  {}\n",
+            &group == &getCurrentGroup() ? ">" : " ",
+            group.getName(),
+            group.isMuted() ? "[M]" : "   ",
+            group.isPaused() ? "|| " : "   ",
+            group.getVolume() * 100.f,
+            showPan ? std::format("pan: {:1.0f} {}",
+                std::abs(panLevel * 10.f),
+                panLevel > 0.f ? "right" : "left"
+            ) : ""
+        );
+    }
+
+    std::cout << "=================== Sounds ===================\n";
+
+    for (auto& [key, sound] : sounds)
+    {
+        std::cout << std::format("{} {}  {}\n",
+            sound.isPlaying() ? "~" : " ",
+            key,
+            sound.getName());
+    }
+
+    std::cout << std::flush;
 }
 
 
