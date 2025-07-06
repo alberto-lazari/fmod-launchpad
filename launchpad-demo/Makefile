@@ -4,23 +4,27 @@ CXX := g++
 # Directories
 BUILD_DIR := build
 SRC_DIR := src
+LIB_DIR := launchpad
 BIN_DIR := $(BUILD_DIR)/bin
 OBJ_DIR := $(BUILD_DIR)/obj
-FMOD_DIR := fmod/core
+
+# Libraries
+LIB_NAME := launchpad
+STATIC_LIB := $(LIB_DIR)/lib$(LIB_NAME).a
 
 # Executable
-PROJ := launchpad
+PROJ := launchpad-demo
 EXE := $(BIN_DIR)/$(PROJ)
 MAIN_SRC := $(SRC_DIR)/main.cpp
 
 # Source & Headers
 SRC := $(patsubst $(MAIN_SRC),,$(wildcard $(SRC_DIR)/*.cpp))
-INCLUDE_PATHS := $(FMOD_DIR)/include $(SRC_DIR)
+INCLUDE_PATHS := $(LIB_DIR)/include $(SRC_DIR)
 OBJ := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC))
 
 # Compiler & Linker Flags
 CXXFLAGS := -std=c++20 -Wall -Wextra $(INCLUDE_PATHS:%=-I%)
-LDFLAGS := -L$(FMOD_DIR)/lib -lfmod -Wl,-rpath,$(FMOD_DIR)/lib
+LDFLAGS := -L$(LIB_DIR)/lib -l$(LIB_NAME) -lfmod -Wl,-rpath,$(LIB_DIR)/lib
 
 # Dependency files
 DEPS := $(OBJ:.o=.d)
@@ -29,8 +33,13 @@ DEPS := $(OBJ:.o=.d)
 exe: $(EXE)
 
 # Compile executable
-$(EXE): $(MAIN_SRC) $(OBJ) | $(BIN_DIR)
+$(EXE): $(MAIN_SRC) $(OBJ) | $(BIN_DIR) $(STATIC_LIB)
 	@"$(CXX)" $(CXXFLAGS) $(OBJ) "$<" -o "$@" $(LDFLAGS)
+
+# Create static library
+$(STATIC_LIB):
+	@echo "[build] lib$(LIB_NAME).a"
+	@$(MAKE) -C "$(LIB_DIR)"
 
 # Compile object files
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
@@ -48,4 +57,4 @@ clean:
 # Include dependency files
 -include $(DEPS)
 
-.PHONY: all clean test
+.PHONY: exe clean

@@ -1,5 +1,7 @@
 #include "Launchpad.h"
-#include "Sound.h"
+#include "tui.h"
+
+#include <iostream>
 
 int main()
 {
@@ -27,8 +29,32 @@ int main()
         "Rythm guitar",
         "Lead guitar",
     };
+    std::cout << "//// Launchpad startup... ////" << std::endl;
     Launchpad launchpad(sounds, groups);
-    launchpad.mainLoop();
+
+    FMOD::ChannelGroup* selectedGroup = launchpad.getGroup(0);
+    Key key;
+    while ((key = getKey()) != Key::QUIT)
+    {
+        switch (key)
+        {
+            case Key::MUTE:
+                launchpad.muteGroup(selectedGroup);
+                break;
+            case Key::PLAY_PAUSE:
+                launchpad.togglePlayPause();
+                break;
+            case Key::STOP:
+                launchpad.stopGroup(selectedGroup);
+                break;
+            case Key::NEXT_GROUP:
+                // TODO
+                break;
+            default:
+                launchpad.playSound(key.keyChar, selectedGroup);
+                break;
+        }
+    }
 
     return 0;
 }

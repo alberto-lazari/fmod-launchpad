@@ -1,7 +1,5 @@
 #include "Launchpad.h"
-
 #include "common.h"
-#include "tui.h"
 
 Launchpad::Launchpad() : Launchpad({}, {})
 {
@@ -22,7 +20,6 @@ Launchpad::Launchpad(
 
     Guard(system->getMasterChannelGroup(&masterGroup));
     groups.push_back(masterGroup);
-    selectedGroup = masterGroup;
 
     // Add channel groups to master group hierarchy
     for (const auto& groupName : i_groups)
@@ -36,29 +33,6 @@ Launchpad::~Launchpad()
     // Destroy all sounds before closing system
     sounds.clear();
     Guard(system->release());
-}
-
-void Launchpad::mainLoop()
-{
-    Key key = '\0';
-    while ((key = getch()) != Key::QUIT)
-    {
-        switch (key)
-        {
-            case Key::MUTE:
-                muteGroup(selectedGroup);
-                break;
-            case Key::PLAY_PAUSE:
-                togglePlayPause();
-                break;
-            case Key::STOP:
-                stopGroup(selectedGroup);
-                break;
-            default:
-                playSound(key.keyChar, selectedGroup);
-                break;
-        }
-    }
 }
 
 void Launchpad::addSound(char i_key, const Sound::Params& i_params)
@@ -102,6 +76,13 @@ void Launchpad::togglePlayPause()
     bool isPaused;
     Guard(masterGroup->getPaused(&isPaused));
     Guard(masterGroup->setPaused(!isPaused));
+}
+
+FMOD::ChannelGroup* Launchpad::getGroup(unsigned int index) const
+{
+    if (index >= groups.size()) return nullptr;
+
+    return groups[index];
 }
 
 

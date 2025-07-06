@@ -14,7 +14,6 @@ private:
     std::vector<FMOD::ChannelGroup*> groups;
     FMOD::System* system {};
     FMOD::ChannelGroup* masterGroup {};
-    FMOD::ChannelGroup* selectedGroup {};
 
 public:
     Launchpad();
@@ -24,8 +23,6 @@ public:
     );
     ~Launchpad();
 
-    void mainLoop();
-
     void addSound(char key, const Sound::Params& params);
     void addGroup(const std::string& name);
 
@@ -33,6 +30,8 @@ public:
     void stopGroup(FMOD::ChannelGroup* group);
     void playSound(char key, FMOD::ChannelGroup* group);
     void togglePlayPause();
+
+    FMOD::ChannelGroup* getGroup(unsigned int index) const;
 
 private:
     static FMOD::System* System_Init();

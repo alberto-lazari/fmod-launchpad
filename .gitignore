@@ -1,2 +1,10 @@
-# Binaries
+# Compiled binaries
 build
+launchpad/lib
+
+# Fallback for individual binary files
+*.o
+*.d
+*.a
+*.lib
+*.exe
