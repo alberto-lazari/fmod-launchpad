@@ -37,9 +37,9 @@ $(STATIC_LIB): $(OBJ) | $(LIB_DIR)
 
 # Link fmod lib
 $(FMOD_LIB_LINK): $(FMOD_LIB) | $(LIB_DIR)
-	@echo "[link] libfmod.dylib"
+	@echo "[link dependency] libfmod.dylib"
 	@[ ! -L "$@" ] || rm "$@"
-	# Link agains relative fmod lib path
+	@# Link against relative fmod lib path
 	@ln -s "../$(FMOD_LIB)" "$@"
 
 # Compile object files

@@ -10,7 +10,7 @@ OBJ_DIR := $(BUILD_DIR)/obj
 
 # Libraries
 LIB_NAME := launchpad
-STATIC_LIB := $(LIB_DIR)/lib$(LIB_NAME).a
+STATIC_LIB := $(LIB_DIR)/lib/lib$(LIB_NAME).a
 
 # Executable
 PROJ := launchpad-demo
@@ -34,12 +34,14 @@ exe: $(EXE)
 
 # Compile executable
 $(EXE): $(MAIN_SRC) $(OBJ) | $(BIN_DIR) $(STATIC_LIB)
+	@echo "[compile] $(patsubst $(SRC_DIR)/%.cpp,%.cpp,$<)"
 	@"$(CXX)" $(CXXFLAGS) $(OBJ) "$<" -o "$@" $(LDFLAGS)
 
 # Create static library
 $(STATIC_LIB):
-	@echo "[build] lib$(LIB_NAME).a"
+	@echo "=== [build] lib$(LIB_NAME).a ==="
 	@$(MAKE) -C "$(LIB_DIR)"
+	@echo "=== [done] lib$(LIB_NAME).a ==="
 
 # Compile object files
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
