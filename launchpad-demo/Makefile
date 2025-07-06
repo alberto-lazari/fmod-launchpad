@@ -4,13 +4,17 @@ CXX := g++
 # Directories
 BUILD_DIR := build
 SRC_DIR := src
-LIB_DIR := launchpad
-BIN_DIR := $(BUILD_DIR)/bin
+BIN_DIR := bin
 OBJ_DIR := $(BUILD_DIR)/obj
+LIB_DIR := launchpad
+THIRD_PARTY_DIR := $(LIB_DIR)/third-party
 
 # Libraries
 LIB_NAME := launchpad
 STATIC_LIB := $(LIB_DIR)/lib/lib$(LIB_NAME).a
+THIRD_PARTY_LIB_PATHS := $(shell find $(THIRD_PARTY_DIR) -name 'lib')
+THIRD_PARTY_PATHS := $(patsubst %/lib,%,$(THIRD_PARTY_LIB_PATHS))
+THIRD_PARTY_LIBS := $(patsubst $(THIRD_PARTY_DIR)/%,%,$(THIRD_PARTY_PATHS))
 
 # Executable
 PROJ := launchpad-demo
@@ -23,8 +27,10 @@ INCLUDE_PATHS := $(LIB_DIR)/include $(SRC_DIR)
 OBJ := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC))
 
 # Compiler & Linker Flags
-CXXFLAGS := -std=c++20 -Wall -Wextra $(INCLUDE_PATHS:%=-I%)
-LDFLAGS := -L$(LIB_DIR)/lib -l$(LIB_NAME) -lfmod -Wl,-rpath,$(LIB_DIR)/lib
+CXXFLAGS := -std=c++20 -Wall -Wextra $(addprefix -I, $(INCLUDE_PATHS))
+LDFLAGS := $(addprefix -L, $(LIB_DIR)/lib $(THIRD_PARTY_LIB_PATHS)) \
+					 $(addprefix -l, $(LIB_NAME) $(THIRD_PARTY_LIBS)) \
+					 $(THIRD_PARTY_LIB_PATHS:%=-Wl,-rpath,%)
 
 # Dependency files
 DEPS := $(OBJ:.o=.d)
