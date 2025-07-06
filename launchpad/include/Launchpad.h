@@ -39,9 +39,6 @@ public:
             sounds.at(key).play(group.group);
         }
     }
-    void togglePlayPause(Group& group) { group.togglePlayPause(); }
-    void toggleMute(Group& group) { group.toggleMute(); }
-    void stop(Group& group) { group.stop(); }
 
     Group& getCurrentGroup() { return groups.at(currentGroupIndex); }
 
