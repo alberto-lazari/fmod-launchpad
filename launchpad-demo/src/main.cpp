@@ -3,6 +3,16 @@
 
 #include <iostream>
 
+void printLaunchpadUI(Launchpad& launchpad)
+{
+    clearScreen();
+    launchpad.dump();
+    std::cout
+        << "==============================================\n"
+        << "               Press ? for help"
+        << std::flush;
+}
+
 void mainLoop(Launchpad& launchpad)
 {
     Key key;
@@ -45,10 +55,7 @@ void mainLoop(Launchpad& launchpad)
                 break;
         }
 
-        hideCursor();
-        clearScreen();
-        launchpad.dump();
-        showCursor();
+        printLaunchpadUI(launchpad);
     }
 }
 
@@ -82,11 +89,12 @@ int main()
     initScreen();
     std::cout << "Initializing system..." << std::endl;
     Launchpad launchpad(sounds, groups);
-    clearScreen();
-    launchpad.dump();
+
+    printLaunchpadUI(launchpad);
 
     mainLoop(launchpad);
 
     clearScreen();
+    showCursor();
     return 0;
 }

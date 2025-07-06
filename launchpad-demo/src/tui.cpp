@@ -112,6 +112,7 @@ void initScreen()
     dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
     SetConsoleMode(hOut, dwMode);
 #endif
+    hideCursor();
     std::cout << "\033[2J\033[H" << std::flush;
 }
 
@@ -134,7 +135,6 @@ void showCursor()
 
 void printHelp()
 {
-    hideCursor();
     clearScreen();
 
     std::cout
@@ -153,8 +153,7 @@ void printHelp()
         << std::format("  {}          Show this message\n", Key::CHAR_HELP)
         << "==============================================\n"
         << "    Press any key to go back to Launchpad"
-        << std::endl;
+        << std::flush;
 
-    showCursor();
     getch();
 }
