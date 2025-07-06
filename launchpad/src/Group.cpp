@@ -100,6 +100,30 @@ void Group::addGroup(const Group& i_subGroup)
     Guard(group->addGroup(i_subGroup.group));
 }
 
+void Group::changeVolume(bool i_volumeUp, float i_step)
+{
+    if (!group) return;
+
+    float volume;
+    Guard(group->getVolume(&volume));
+    volume += i_volumeUp ? i_step : -i_step;
+    if (volume < 0.f) volume = 0.f;
+
+    Guard(group->setVolume(volume));
+}
+
+void Group::pan(bool i_panRight, float i_step)
+{
+    panLevel += i_panRight ? i_step : -i_step;
+    if (panLevel > 1.f) panLevel = 1.f;
+    if (panLevel < -1.f) panLevel = -1.f;
+
+    if (group)
+    {
+        Guard(group->setPan(panLevel));
+    }
+}
+
 std::string Group::getInternalName()
 {
     if (!group) return "[null]";

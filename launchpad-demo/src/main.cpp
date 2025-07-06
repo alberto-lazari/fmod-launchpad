@@ -38,19 +38,31 @@ int main()
         switch (key)
         {
             case Key::MUTE:
-                launchpad.toggleGroupMute();
+                launchpad.groupToggleMute();
                 break;
             case Key::PLAY_PAUSE:
                 launchpad.togglePlayPause();
                 break;
             case Key::STOP:
-                launchpad.stopGroup();
+                launchpad.groupStop();
                 break;
             case Key::NEXT_GROUP:
                 launchpad.nextGroup();
                 break;
             case Key::PREV_GROUP:
                 launchpad.previousGroup();
+                break;
+            case Key::VOLUME_UP:
+                launchpad.groupVolumeUp();
+                break;
+            case Key::VOLUME_DOWN:
+                launchpad.groupVolumeDown();
+                break;
+            case Key::PAN_LEFT:
+                launchpad.groupPanLeft();
+                break;
+            case Key::PAN_RIGHT:
+                launchpad.groupPanRight();
                 break;
             default:
                 launchpad.playSound(key.keyChar);

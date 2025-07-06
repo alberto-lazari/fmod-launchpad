@@ -19,6 +19,7 @@ private:
     std::string name;
     FMOD::System* system;
     FMOD::ChannelGroup* group {};
+    float panLevel = 0.f;
     bool ownsGroup = true;
 
     Group(
@@ -44,6 +45,8 @@ public:
     void toggleMute();
     void togglePlayPause();
     void stop();
+    void changeVolume(bool volumeUp, float step = 0.1f);
+    void pan(bool panRight, float step = 0.1f);
 
     void addGroup(const Group& subGroup);
     const std::string& getName() const { return name; }

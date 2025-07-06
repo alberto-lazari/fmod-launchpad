@@ -50,8 +50,12 @@ public:
         }
     }
     void togglePlayPause() { Group::Master(system).togglePlayPause(); }
-    void toggleGroupMute() { getCurrentGroup().toggleMute(); }
-    void stopGroup() { getCurrentGroup().stop(); }
+    void groupToggleMute() { getCurrentGroup().toggleMute(); }
+    void groupStop()       { getCurrentGroup().stop(); }
+    void groupVolumeUp()   { getCurrentGroup().changeVolume(true); }
+    void groupVolumeDown() { getCurrentGroup().changeVolume(false); }
+    void groupPanLeft()    { getCurrentGroup().pan(false); }
+    void groupPanRight()   { getCurrentGroup().pan(true); }
 
 private:
     static FMOD::System* SystemInit();

@@ -8,22 +8,37 @@ struct Key
         PLAY_PAUSE,
         QUIT,
         STOP,
-        PLAY_SOUND,
         NEXT_GROUP,
         PREV_GROUP,
+        VOLUME_UP,
+        VOLUME_DOWN,
+        PAN_LEFT,
+        PAN_RIGHT,
+        HELP,
+        PLAY_SOUND,
         OTHER,
     };
 
-    static constexpr char CHAR_NULL = '\0';
-    static constexpr char CHAR_MUTE = 'M';
-    static constexpr char CHAR_PLAY_PAUSE = ' ';
-    static constexpr char CHAR_QUIT = 'Q';
-    static constexpr char CHAR_STOP = 'S';
-    static constexpr char CHAR_NEXT_GROUP = 'N';
-    static constexpr char CHAR_PREV_GROUP = 'P';
-    static constexpr char CHAR_ESC = '\x1b';
-    static constexpr char CHAR_UP_ARROW = 'A';
-    static constexpr char CHAR_DOWN_ARROW = 'B';
+    // Command keys
+    static constexpr char CHAR_NULL         = '\0';
+    static constexpr char CHAR_MUTE         = 'M';
+    static constexpr char CHAR_PLAY_PAUSE   = ' ';
+    static constexpr char CHAR_QUIT         = 'Q';
+    static constexpr char CHAR_STOP         = 'S';
+    static constexpr char CHAR_NEXT_GROUP   = 'N';
+    static constexpr char CHAR_PREV_GROUP   = 'P';
+    static constexpr char CHAR_VOLUME_UP    = '+';
+    static constexpr char CHAR_VOLUME_DOWN  = '-';
+    static constexpr char CHAR_PAN_LEFT     = 'L';
+    static constexpr char CHAR_PAN_RIGHT    = 'R';
+    static constexpr char CHAR_HELP         = '?';
+
+    // Escape sequence characters
+    static constexpr char CHAR_ESC          = '\x1b';
+    static constexpr char CHAR_UP_ARROW     = 'A';
+    static constexpr char CHAR_DOWN_ARROW   = 'B';
+    static constexpr char CHAR_RIGHT_ARROW  = 'C';
+    static constexpr char CHAR_LEFT_ARROW   = 'D';
 
     Key();
     Key(EnumType value);
