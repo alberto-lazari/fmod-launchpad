@@ -32,26 +32,28 @@ int main()
     std::cout << "//// Launchpad startup... ////" << std::endl;
     Launchpad launchpad(sounds, groups);
 
-    FMOD::ChannelGroup* selectedGroup = launchpad.getGroup(0);
     Key key;
     while ((key = getKey()) != Key::QUIT)
     {
         switch (key)
         {
             case Key::MUTE:
-                launchpad.muteGroup(selectedGroup);
+                launchpad.toggleGroupMute();
                 break;
             case Key::PLAY_PAUSE:
                 launchpad.togglePlayPause();
                 break;
             case Key::STOP:
-                launchpad.stopGroup(selectedGroup);
+                launchpad.stopGroup();
                 break;
             case Key::NEXT_GROUP:
-                // TODO
+                launchpad.nextGroup();
+                break;
+            case Key::PREV_GROUP:
+                launchpad.previousGroup();
                 break;
             default:
-                launchpad.playSound(key.keyChar, selectedGroup);
+                launchpad.playSound(key.keyChar);
                 break;
         }
     }

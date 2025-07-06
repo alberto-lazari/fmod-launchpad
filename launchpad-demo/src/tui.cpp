@@ -7,17 +7,17 @@ Key::Key()
 
 Key::Key(EnumType v)
     : value(v)
-    , keyChar(charOf(v))
+    , keyChar(CharOf(v))
 {
 }
 
 Key::Key(char c)
-    : value(fromChar(c))
+    : value(FromChar(c))
     , keyChar(c)
 {
 }
 
-char Key::charOf(EnumType e)
+char Key::CharOf(EnumType e)
 {
     switch (e)
     {
@@ -29,7 +29,7 @@ char Key::charOf(EnumType e)
     }
 }
 
-Key::EnumType Key::fromChar(char c)
+Key::EnumType Key::FromChar(char c)
 {
     switch (c)
     {
@@ -39,7 +39,7 @@ Key::EnumType Key::fromChar(char c)
         case CHAR_STOP: return STOP;
         case CHAR_NEXT_GROUP: return NEXT_GROUP;
         case CHAR_PREV_GROUP: return PREV_GROUP;
-        default: return isSoundKey(c) ? PLAY_SOUND : OTHER;
+        default: return IsSoundKey(c) ? PLAY_SOUND : OTHER;
     }
 }
 

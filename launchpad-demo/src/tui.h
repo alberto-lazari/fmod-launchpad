@@ -31,14 +31,14 @@ struct Key
 
     operator EnumType() const { return value; }
 
-    static char charOf(EnumType e);
+    static char CharOf(EnumType e);
 
 private:
     EnumType value;
 
-    static EnumType fromChar(char c);
+    static EnumType FromChar(char c);
 
-    static bool isSoundKey(char c)
+    static bool IsSoundKey(char c)
     {
         // Sound keys are lowercase letters and numbers
         return (c >= 'a' && c <= 'z')

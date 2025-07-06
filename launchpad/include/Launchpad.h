@@ -1,40 +1,61 @@
 #pragma once
 
-#include "fmod.hpp"
 #include "Sound.h"
+#include "Group.h"
 
 #include <map>
 #include <vector>
 #include <string>
+#include <optional>
 
 class Launchpad
 {
 private:
     std::map<char, Sound> sounds;
-    std::vector<FMOD::ChannelGroup*> groups;
+    std::vector<Group> groups;
     FMOD::System* system {};
-    FMOD::ChannelGroup* masterGroup {};
+    size_t currentGroupIndex = 0;
 
 public:
     Launchpad();
     Launchpad(
         const std::map<char, Sound::Params>& sounds,
-        const std::vector<std::string>& channels
+        const std::vector<std::string>& groupNames
     );
     ~Launchpad();
 
     void addSound(char key, const Sound::Params& params);
     void addGroup(const std::string& name);
 
-    void muteGroup(FMOD::ChannelGroup* group);
-    void stopGroup(FMOD::ChannelGroup* group);
-    void playSound(char key, FMOD::ChannelGroup* group);
-    void togglePlayPause();
+    Group* getGroup(const std::string& name);
 
-    FMOD::ChannelGroup* getGroup(unsigned int index) const;
+    Group& nextGroup();
+    Group& previousGroup();
+
+    void playSound(char key, const Group& group)
+    {
+        if (sounds.contains(key))
+        {
+            sounds.at(key).play(group.group);
+        }
+    }
+    void togglePlayPause(Group& group) { group.togglePlayPause(); }
+    void toggleMute(Group& group) { group.toggleMute(); }
+    void stop(Group& group) { group.stop(); }
+
+    Group& getCurrentGroup() { return groups.at(currentGroupIndex); }
+
+    void playSound(char key)
+    {
+        if (sounds.contains(key))
+        {
+            sounds.at(key).play(getCurrentGroup().group);
+        }
+    }
+    void togglePlayPause() { Group::Master(system).togglePlayPause(); }
+    void toggleGroupMute() { getCurrentGroup().toggleMute(); }
+    void stopGroup() { getCurrentGroup().stop(); }
 
 private:
-    static FMOD::System* System_Init();
-
-    std::string getGroupName(FMOD::ChannelGroup* group);
+    static FMOD::System* SystemInit();
 };

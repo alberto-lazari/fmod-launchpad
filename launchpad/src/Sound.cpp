@@ -26,7 +26,7 @@ Sound::Sound(FMOD::System* i_system, const Params& i_params)
         i_system,
         i_params.path,
         i_params.name,
-        makeMode(i_params)
+        MakeMode(i_params)
     )
 {
 }
@@ -118,7 +118,7 @@ void Sound::play(FMOD::ChannelGroup* i_group)
 }
 
 
-FMOD_MODE Sound::makeMode(const Params& i_params)
+FMOD_MODE Sound::MakeMode(const Params& i_params)
 {
     FMOD_MODE mode = FMOD_DEFAULT;
 

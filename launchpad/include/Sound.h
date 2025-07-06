@@ -1,8 +1,19 @@
 #pragma once
 
-#include "fmod.hpp"
-
 #include <string>
+
+namespace FMOD
+{
+
+class System;
+class Sound;
+class Channel;
+class ChannelGroup;
+
+} // namespace FMOD
+
+typedef unsigned int FMOD_MODE;
+
 
 class Sound
 {
@@ -43,6 +54,7 @@ public:
     // Release owned resource
     ~Sound();
 
+
     std::string getName();
     bool isPlaying();
     bool isLoop();
@@ -51,5 +63,5 @@ public:
     void play(FMOD::ChannelGroup* group);
 
 private:
-    static FMOD_MODE makeMode(const Params& params);
+    static FMOD_MODE MakeMode(const Params& params);
 };

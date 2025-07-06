@@ -7,10 +7,9 @@ Launchpad::Launchpad() : Launchpad({}, {})
 
 Launchpad::Launchpad(
     const std::map<char, Sound::Params>& i_sounds,
-    const std::vector<std::string>& i_groups
+    const std::vector<std::string>& i_groupNames
 )
-    : groups(std::vector<FMOD::ChannelGroup*>(i_groups.size() + 1))
-    , system(System_Init())
+    : system(SystemInit())
 {
     // Create sounds
     for (const auto& [key, soundParams] : i_sounds)
@@ -18,11 +17,10 @@ Launchpad::Launchpad(
         addSound(key, soundParams);
     }
 
-    Guard(system->getMasterChannelGroup(&masterGroup));
-    groups.push_back(masterGroup);
+    groups.push_back(std::move(Group::Master(system)));
 
     // Add channel groups to master group hierarchy
-    for (const auto& groupName : i_groups)
+    for (const auto& groupName : i_groupNames)
     {
         addGroup(groupName);
     }
@@ -30,8 +28,10 @@ Launchpad::Launchpad(
 
 Launchpad::~Launchpad()
 {
-    // Destroy all sounds before closing system
+    // Destroy all sounds and groups before closing system
     sounds.clear();
+    groups.clear();
+
     Guard(system->release());
 }
 
@@ -42,64 +42,41 @@ void Launchpad::addSound(char i_key, const Sound::Params& i_params)
 
 void Launchpad::addGroup(const std::string& i_name)
 {
-    FMOD::ChannelGroup* group {};
-    Guard(system->createChannelGroup(i_name.c_str(), &group));
-    Guard(masterGroup->addGroup(group));
-    groups.push_back(group);
+    Group group(system, i_name);
+    Group::Master(system).addGroup(group);
+    groups.push_back(std::move(group));
 }
 
-void Launchpad::muteGroup(FMOD::ChannelGroup* i_group)
+Group* Launchpad::getGroup(const std::string& i_name)
 {
-    if (!i_group) return;
-
-    bool isMuted;
-    Guard(i_group->getMute(&isMuted));
-    Guard(i_group->setMute(!isMuted));
+    for (auto& group : groups)
+    {
+        if (group.getName() == i_name)
+        {
+            return &group;
+        }
+    }
+    return nullptr;
 }
 
-void Launchpad::stopGroup(FMOD::ChannelGroup* i_group)
+Group& Launchpad::nextGroup()
 {
-    if (!i_group) return;
-
-    Guard(i_group->stop());
+    currentGroupIndex = (currentGroupIndex + 1) % groups.size();
+    return getCurrentGroup();
 }
 
-void Launchpad::playSound(char i_key, FMOD::ChannelGroup* i_group)
+Group& Launchpad::previousGroup()
 {
-    if (!sounds.contains(i_key)) return;
-
-    sounds.at(i_key).play(i_group);
-}
-
-void Launchpad::togglePlayPause()
-{
-    bool isPaused;
-    Guard(masterGroup->getPaused(&isPaused));
-    Guard(masterGroup->setPaused(!isPaused));
-}
-
-FMOD::ChannelGroup* Launchpad::getGroup(unsigned int index) const
-{
-    if (index >= groups.size()) return nullptr;
-
-    return groups[index];
+    currentGroupIndex = (currentGroupIndex + groups.size() - 1) % groups.size();
+    return getCurrentGroup();
 }
 
 
-FMOD::System* Launchpad::System_Init()
+FMOD::System* Launchpad::SystemInit()
 {
     FMOD::System* sys {};
     Guard(FMOD::System_Create(&sys));
     Guard(sys->init(512, FMOD_INIT_NORMAL, 0));
 
     return sys;
-}
-
-std::string Launchpad::getGroupName(FMOD::ChannelGroup* i_group)
-{
-    if (!i_group) return "[null]";
-
-    char name[256];
-    Guard(i_group->getName(name, sizeof(name)));
-    return i_group == masterGroup ? "Master" : name;
 }
