@@ -89,18 +89,27 @@ char getch()
 Key getKey()
 {
     char c = getch();
-    if (c != Key::CHAR_ESC) return Key(c);
 
     // Detect escape sequence for arrows
-    if (getch() != '[') return Key::OTHER;
-    switch(getch())
+#ifdef _WIN32
+    if (c == Key::CHAR_WIN_ESCAPE)
     {
-        case Key::CHAR_DOWN_ARROW: return Key::NEXT_GROUP;
-        case Key::CHAR_UP_ARROW: return Key::PREV_GROUP;
-        case Key::CHAR_LEFT_ARROW: return Key::PAN_LEFT;
-        case Key::CHAR_RIGHT_ARROW: return Key::PAN_RIGHT;
-        default: return Key::OTHER;
+#else
+    if (c == Key::CHAR_ESC)
+    {
+        if (getch() != '[') return Key::OTHER;
+#endif
+        switch (getch())
+        {
+            case Key::CHAR_DOWN_ARROW: return Key::NEXT_GROUP;
+            case Key::CHAR_UP_ARROW: return Key::PREV_GROUP;
+            case Key::CHAR_LEFT_ARROW: return Key::PAN_LEFT;
+            case Key::CHAR_RIGHT_ARROW: return Key::PAN_RIGHT;
+            default: return Key::OTHER;
+        }
     }
+
+    return Key(c);
 }
 
 

@@ -37,11 +37,19 @@ struct Key
     static constexpr char CHAR_HELP         = '?';
 
     // Escape sequence characters
-    static constexpr char CHAR_ESC          = '\x1b';
+    static constexpr char CHAR_ESC          = '\033';
+#ifdef _WIN32
+    static constexpr char CHAR_WIN_ESCAPE   = -32;
+    static constexpr char CHAR_UP_ARROW     = 72;
+    static constexpr char CHAR_DOWN_ARROW   = 80;
+    static constexpr char CHAR_RIGHT_ARROW  = 75;
+    static constexpr char CHAR_LEFT_ARROW   = 77;
+#else
     static constexpr char CHAR_UP_ARROW     = 'A';
     static constexpr char CHAR_DOWN_ARROW   = 'B';
     static constexpr char CHAR_RIGHT_ARROW  = 'C';
     static constexpr char CHAR_LEFT_ARROW   = 'D';
+#endif
 
     Key();
     Key(EnumType value);
