@@ -4,9 +4,18 @@ build
 launchpad/lib
 dist
 
+# Visual Studio garbage
+x64
+x86
+.vs
+*.vcxproj.*
+
 # Fallback for individual binary files
 *.o
 *.d
 *.a
 *.lib
+*.dll
+*.dylib
+*.so
 *.exe

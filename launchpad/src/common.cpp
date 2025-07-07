@@ -2,6 +2,7 @@
 #include "fmod_errors.h"
 
 #include <iostream>
+#include <format>
 
 void Guard(FMOD_RESULT rc)
 {
