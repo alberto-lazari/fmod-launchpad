@@ -12,8 +12,8 @@ THIRD_PARTY_DIR := $(LIB_DIR)/third-party
 # Libraries
 LIB_NAME := launchpad
 STATIC_LIB := $(LIB_DIR)/lib/lib$(LIB_NAME).a
-THIRD_PARTY_LIB_PATHS := $(shell find $(THIRD_PARTY_DIR) -name 'lib')
-THIRD_PARTY_PATHS := $(patsubst %/lib,%,$(THIRD_PARTY_LIB_PATHS))
+THIRD_PARTY_LIB_PATHS := $(shell find $(THIRD_PARTY_DIR) -name 'lib')/$(shell uname -m)
+THIRD_PARTY_PATHS := $(patsubst %/lib,%,$(shell find $(THIRD_PARTY_DIR) -name 'lib'))
 THIRD_PARTY_LIBS := $(patsubst $(THIRD_PARTY_DIR)/%,%,$(THIRD_PARTY_PATHS))
 
 # Executable
