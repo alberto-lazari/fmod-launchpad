@@ -11,6 +11,9 @@
     #include <unistd.h>
 #endif
 
+namespace TUI
+{
+
 Key::Key()
     : Key(CHAR_NULL)
 {
@@ -112,7 +115,6 @@ void initScreen()
     dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
     SetConsoleMode(hOut, dwMode);
 #endif
-    hideCursor();
     std::cout << "\033[2J\033[H" << std::flush;
 }
 
@@ -157,3 +159,5 @@ void printHelp()
 
     getch();
 }
+
+} // namespace TUI

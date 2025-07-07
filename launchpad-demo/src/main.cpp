@@ -3,9 +3,11 @@
 
 #include <iostream>
 
+using TUI::Key;
+
 void printLaunchpadUI(Launchpad& launchpad)
 {
-    clearScreen();
+    TUI::clearScreen();
     launchpad.dump();
     std::cout
         << "==============================================\n"
@@ -16,7 +18,7 @@ void printLaunchpadUI(Launchpad& launchpad)
 void mainLoop(Launchpad& launchpad)
 {
     Key key;
-    while ((key = getKey()) != Key::QUIT)
+    while ((key = TUI::getKey()) != Key::QUIT)
     {
         switch (key)
         {
@@ -48,7 +50,7 @@ void mainLoop(Launchpad& launchpad)
                 launchpad.groupPanRight();
                 break;
             case Key::HELP:
-                printHelp();
+                TUI::printHelp();
                 break;
             default:
                 launchpad.playSound(key.keyChar);
@@ -86,15 +88,16 @@ int main()
         "Lead guitar",
     };
 
-    initScreen();
+    TUI::initScreen();
     std::cout << "Initializing system..." << std::endl;
     Launchpad launchpad(sounds, groups);
 
+    TUI::hideCursor();
     printLaunchpadUI(launchpad);
 
     mainLoop(launchpad);
 
-    clearScreen();
-    showCursor();
+    TUI::clearScreen();
+    TUI::showCursor();
     return 0;
 }

@@ -1,5 +1,8 @@
 #pragma once
 
+namespace TUI
+{
+
 struct Key
 {
     enum EnumType
@@ -73,3 +76,5 @@ void hideCursor();
 void showCursor();
 
 void printHelp();
+
+} // namespace TUI
