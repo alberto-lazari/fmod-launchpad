@@ -21,12 +21,13 @@ private:
 public:
     Launchpad();
     Launchpad(
+        const std::string& audioDir,
         const std::vector<std::pair<char, Sound::Params>>& sounds,
         const std::vector<std::string>& groupNames
     );
     ~Launchpad();
 
-    void addSound(char key, const Sound::Params& params);
+    void addSound(const std::string& audioDir, char key, const Sound::Params& params);
     void addGroup(const std::string& name);
 
     Group* getGroup(const std::string& name);

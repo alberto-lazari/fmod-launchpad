@@ -4,11 +4,12 @@
 #include <iostream>
 #include <format>
 
-Launchpad::Launchpad() : Launchpad({}, {})
+Launchpad::Launchpad() : Launchpad("", {}, {})
 {
 }
 
 Launchpad::Launchpad(
+    const std::string& i_audioDir,
     const std::vector<std::pair<char, Sound::Params>>& i_sounds,
     const std::vector<std::string>& i_groupNames
 )
@@ -17,7 +18,7 @@ Launchpad::Launchpad(
     // Create sounds
     for (const auto& [key, soundParams] : i_sounds)
     {
-        addSound(key, soundParams);
+        addSound(i_audioDir, key, soundParams);
     }
 
     groups.push_back(std::move(Group::Master(system)));
@@ -38,9 +39,10 @@ Launchpad::~Launchpad()
     Guard(system->release());
 }
 
-void Launchpad::addSound(char i_key, const Sound::Params& i_params)
+void Launchpad::addSound(const std::string& i_audioDir,
+        char i_key, const Sound::Params& i_params)
 {
-    sounds.insert({ i_key, Sound(system, i_params) });
+    sounds.insert({ i_key, Sound(system, i_audioDir, i_params) });
     soundKeys.push_back(i_key);
 }
 

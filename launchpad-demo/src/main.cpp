@@ -1,9 +1,10 @@
 #include "Launchpad.h"
 #include "tui.h"
+using TUI::Key;
 
 #include <iostream>
-
-using TUI::Key;
+#include <filesystem>
+namespace fs = std::filesystem;
 
 void printLaunchpadUI(Launchpad& launchpad)
 {
@@ -61,25 +62,48 @@ void mainLoop(Launchpad& launchpad)
     }
 }
 
-int main()
+// Try finding audio directoy in current path or in executable directory
+fs::path audioDir(const char* argv0, const std::string& dirName) {
+    fs::path invokedPath = argv0;
+    fs::path local = dirName;
+    if (fs::exists(local) && fs::is_directory(local))
+    {
+        return local;
+    }
+
+    fs::path exeRelative = fs::absolute(invokedPath).parent_path() / dirName;
+    if (fs::exists(exeRelative) && fs::is_directory(exeRelative))
+    {
+        return exeRelative;
+    }
+
+    std::cerr << "error: could not find 'audio/' directory.\n"
+        << std::format("Tried paths: './{}' and '{}'\n",
+            local.string(),
+            exeRelative.string()
+        );
+    exit(1);
+}
+
+int main(int, const char* argv[])
 {
     std::vector<std::pair<char, Sound::Params>> sounds
     {
-        { 'd', { .name = "Drums", .path = "drums-loop.wav", .loop = true } },
-        { 'b', { .name = "Bass drums", .path = "bass-drums-loop.wav", .loop = true } },
-        { 'v', { .name = "Verse strum", .path = "verse-strum-loop.wav", .loop = true } },
-        { 'c', { .name = "Chorus strum", .path = "chorus-strum-loop.wav", .loop = true } },
+        { 'd', { .name = "Drums", .file = "drums-loop.wav", .loop = true } },
+        { 'b', { .name = "Bass drums", .file = "bass-drums-loop.wav", .loop = true } },
+        { 'v', { .name = "Verse strum", .file = "verse-strum-loop.wav", .loop = true } },
+        { 'c', { .name = "Chorus strum", .file = "chorus-strum-loop.wav", .loop = true } },
 
-        { 'i', { .name = "Drums intro", .path = "drums-intro.wav" } },
-        { 'g', { .name = "Guitar intro", .path = "guitar-intro.wav" } },
-        { '1', { .name = "Fill 1", .path = "fill-1.wav" } },
-        { '2', { .name = "Fill 2", .path = "fill-2.wav" } },
-        { '3', { .name = "Fill 3", .path = "fill-3.wav" } },
-        { 'y', { .name = "Chorus fill syncopated", .path = "chorus-fill-syncopated.wav" } },
-        { 's', { .name = "Chorus fill straight", .path = "chorus-fill-straight.wav" } },
-        { 'o', { .name = "Guitar solo", .path = "guitar-solo.wav" } },
+        { 'i', { .name = "Drums intro", .file = "drums-intro.wav" } },
+        { 'g', { .name = "Guitar intro", .file = "guitar-intro.wav" } },
+        { '1', { .name = "Fill 1", .file = "fill-1.wav" } },
+        { '2', { .name = "Fill 2", .file = "fill-2.wav" } },
+        { '3', { .name = "Fill 3", .file = "fill-3.wav" } },
+        { 'y', { .name = "Chorus fill syncopated", .file = "chorus-fill-syncopated.wav" } },
+        { 's', { .name = "Chorus fill straight", .file = "chorus-fill-straight.wav" } },
+        { 'o', { .name = "Guitar solo", .file = "guitar-solo.wav" } },
 
-        { 'f', { .name = "Full mix", .path = "dreams-instrumental.wav", .stream = true } },
+        { 'f', { .name = "Full mix", .file = "dreams-instrumental.wav", .stream = true } },
     };
     std::vector<std::string> groups
     {
@@ -90,7 +114,7 @@ int main()
 
     TUI::initScreen();
     std::cout << "Initializing system..." << std::endl;
-    Launchpad launchpad(sounds, groups);
+    Launchpad launchpad(audioDir(argv[0], "audio").string(), sounds, groups);
 
     TUI::hideCursor();
     printLaunchpadUI(launchpad);

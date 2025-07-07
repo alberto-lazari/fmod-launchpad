@@ -3,7 +3,8 @@
 
 Sound::Sound(
     FMOD::System* i_system,
-    const std::string& i_path,
+    const std::string& i_audioDir,
+    const std::string& i_file,
     const std::string& i_name,
     FMOD_MODE i_mode
 )
@@ -12,19 +13,24 @@ Sound::Sound(
 {
     FMOD_RESULT rc;
     // Search file in default audio assets directory
-    rc = system->createSound((AudioDir + i_path).c_str(), i_mode, nullptr, &sound);
+    rc = system->createSound((i_audioDir + "/" + i_file).c_str(), i_mode, nullptr, &sound);
 
     if (rc == FMOD_ERR_FILE_NOTFOUND)
     {
         // Search file using absolute path
-        Guard(system->createSound(i_path.c_str(), i_mode, nullptr, &sound));
+        Guard(system->createSound(i_file.c_str(), i_mode, nullptr, &sound));
     }
 }
 
-Sound::Sound(FMOD::System* i_system, const Params& i_params)
+Sound::Sound(
+    FMOD::System* i_system,
+    const std::string& i_audioDir,
+    const Params& i_params
+)
     : Sound(
         i_system,
-        i_params.path,
+        i_audioDir,
+        i_params.file,
         i_params.name,
         MakeMode(i_params)
     )

@@ -21,7 +21,7 @@ public:
     struct Params
     {
         std::string name;
-        std::string path;
+        std::string file;
         bool loop = false;
         bool stream = false;
     };
@@ -33,15 +33,18 @@ private:
     FMOD::Channel* channel {};
 
 public:
-    static constexpr const char* AudioDir = "audio/";
-
     Sound(
         FMOD::System* system,
-        const std::string& path,
+        const std::string& audioDir,
+        const std::string& file,
         const std::string& name,
         FMOD_MODE mode
     );
-    Sound(FMOD::System* system, const Params& params);
+    Sound(
+        FMOD::System* system,
+        const std::string& audioDir,
+        const Params& params
+    );
 
     // Prevent copy, define only move.
     // Sound must own its pointers
