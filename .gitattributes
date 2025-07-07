@@ -9,3 +9,6 @@
 
 # Audio files
 *.wav lfs
+
+# Screenshot
+*.png
