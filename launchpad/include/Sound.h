@@ -20,8 +20,8 @@ class Sound
 public:
     struct Params
     {
-        std::string path;
         std::string name;
+        std::string path;
         bool loop = false;
         bool stream = false;
     };
