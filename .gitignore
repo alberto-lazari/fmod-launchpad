@@ -8,7 +8,7 @@ dist
 x64
 x86
 .vs
-*.vcxproj.*
+*.vcxproj.user
 
 # Fallback for individual binary files
 *.o
