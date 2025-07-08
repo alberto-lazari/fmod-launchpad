@@ -1,6 +1,7 @@
 #include "tui.h"
 
 #include <iostream>
+#include <sstream>
 #include <format>
 
 #ifdef _WIN32
@@ -124,47 +125,38 @@ void initScreen()
     dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
     SetConsoleMode(hOut, dwMode);
 #endif
-    std::cout << "\033[2J\033[H" << std::flush;
+    std::cout << MOVE_LINE_TOP << CURSOR_HOME << std::flush;
 }
 
 // Move cursor to home position and clear all lines below
 void clearScreen()
 {
-    std::cout << "\033[H\033[J" << std::flush;
-}
-
-void hideCursor()
-{
-    std::cout << "\033[?25l" << std::flush;
-}
-
-void showCursor()
-{
-    std::cout << "\033[?25h" << std::flush;
+    std::cout << CURSOR_HOME << CLEAR_BELOW_CURSOR << std::flush;
 }
 
 
 void printHelp()
 {
-    clearScreen();
-
-    std::cout
+    std::ostringstream buffer;
+    buffer << CURSOR_HOME
         << "============= Available Commands =============\n"
-        << "  a-z,0-9    Play a sound\n"
-        << "  Space      Play/Pause Master channel\n"
-        << std::format("  {}/Down     Select next channel\n", Key::CHAR_NEXT_GROUP)
-        << std::format("  {}/Up       Select previous channel\n", Key::CHAR_PREV_GROUP)
-        << std::format("  {}          Increment current channel volume\n", Key::CHAR_VOLUME_UP)
-        << std::format("  {}          Decrement current channel volume\n", Key::CHAR_VOLUME_DOWN)
-        << std::format("  {}          Mute current channel\n", Key::CHAR_MUTE)
-        << std::format("  {}          Stop current channel\n", Key::CHAR_STOP)
-        << std::format("  {}/Left     Pan current channel to left\n", Key::CHAR_PAN_LEFT)
-        << std::format("  {}/Right    Pan current channel to right\n", Key::CHAR_PAN_RIGHT)
-        << std::format("  {}          Quit\n", Key::CHAR_QUIT)
-        << std::format("  {}          Show this message\n", Key::CHAR_HELP)
+        << "  a-z,0-9    Play a sound                     \n"
+        << "  Space      Play/Pause Master channel        \n"
+        << std::format("  {}/Down     Select next channel              \n", Key::CHAR_NEXT_GROUP)
+        << std::format("  {}/Up       Select previous channel          \n", Key::CHAR_PREV_GROUP)
+        << std::format("  {}          Raise current channel volume     \n", Key::CHAR_VOLUME_UP)
+        << std::format("  {}          Lower current channel volume     \n", Key::CHAR_VOLUME_DOWN)
+        << std::format("  {}          Mute current channel             \n", Key::CHAR_MUTE)
+        << std::format("  {}          Stop current channel             \n", Key::CHAR_STOP)
+        << std::format("  {}/Left     Pan current channel to left      \n", Key::CHAR_PAN_LEFT)
+        << std::format("  {}/Right    Pan current channel to right     \n", Key::CHAR_PAN_RIGHT)
+        << std::format("  {}          Quit                             \n", Key::CHAR_QUIT)
+        << std::format("  {}          Show this message                \n", Key::CHAR_HELP)
         << "==============================================\n"
-        << "    Press any key to go back to Launchpad"
-        << std::flush;
+        << "    Press any key to go back to Launchpad     "
+        << CLEAR_BELOW_CURSOR;
+
+    std::cout << buffer.str();
 
     getch();
 }

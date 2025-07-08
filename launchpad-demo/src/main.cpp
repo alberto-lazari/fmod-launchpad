@@ -3,17 +3,19 @@
 using TUI::Key;
 
 #include <iostream>
+#include <sstream>
 #include <filesystem>
 namespace fs = std::filesystem;
 
 void printLaunchpadUI(Launchpad& launchpad)
 {
-    TUI::clearScreen();
-    launchpad.dump();
-    std::cout
+    std::ostringstream buffer;
+    buffer << TUI::CURSOR_HOME
+        << launchpad.dump()
         << "==============================================\n"
-        << "               Press ? for help"
-        << std::flush;
+        << "               Press ? for help               ";
+
+    std::cout << buffer.str();
 }
 
 void mainLoop(Launchpad& launchpad)
@@ -116,12 +118,12 @@ int main(int, const char* argv[])
     std::cout << "Initializing system..." << std::endl;
     Launchpad launchpad(audioDir(argv[0], "audio").string(), sounds, groups);
 
-    TUI::hideCursor();
+    std::cout << TUI::HIDE_CURSOR;
     printLaunchpadUI(launchpad);
 
     mainLoop(launchpad);
 
     TUI::clearScreen();
-    TUI::showCursor();
+    std::cout << TUI::SHOW_CURSOR << std::flush;
     return 0;
 }

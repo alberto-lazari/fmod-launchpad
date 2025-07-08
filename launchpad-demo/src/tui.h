@@ -42,8 +42,8 @@ struct Key
     static constexpr char CHAR_WIN_ESCAPE   = -32;
     static constexpr char CHAR_UP_ARROW     = 72;
     static constexpr char CHAR_DOWN_ARROW   = 80;
-    static constexpr char CHAR_RIGHT_ARROW  = 75;
-    static constexpr char CHAR_LEFT_ARROW   = 77;
+    static constexpr char CHAR_RIGHT_ARROW  = 77;
+    static constexpr char CHAR_LEFT_ARROW   = 75;
 #else
     static constexpr char CHAR_UP_ARROW     = 'A';
     static constexpr char CHAR_DOWN_ARROW   = 'B';
@@ -78,10 +78,21 @@ public:
 char getch();
 Key getKey();
 
+// Move cursor to home position (top-left of the terminal window)
+constexpr const char* CURSOR_HOME = "\033[H";
+
+// Move the current last displayed line on top of the terminal window
+constexpr const char* MOVE_LINE_TOP = "\033[2J";
+
+// Clear all lines below the cursor
+constexpr const char* CLEAR_BELOW_CURSOR = "\033[J";
+
+// Show/hide the cursor in the terminal window
+constexpr const char* SHOW_CURSOR = "\033[?25h";
+constexpr const char* HIDE_CURSOR = "\033[?25l";
+
 void initScreen();
 void clearScreen();
-void hideCursor();
-void showCursor();
 
 void printHelp();
 

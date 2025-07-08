@@ -60,7 +60,7 @@ public:
     void groupPanLeft()    { getCurrentGroup().pan(false); }
     void groupPanRight()   { getCurrentGroup().pan(true); }
 
-    void dump();
+    std::string dump();
 
 private:
     static FMOD::System* SystemInit();

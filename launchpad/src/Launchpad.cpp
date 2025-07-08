@@ -1,7 +1,7 @@
 #include "Launchpad.h"
 #include "common.h"
 
-#include <iostream>
+#include <sstream>
 #include <format>
 
 Launchpad::Launchpad() : Launchpad("", {}, {})
@@ -77,40 +77,43 @@ Group& Launchpad::previousGroup()
     return getCurrentGroup();
 }
 
-void Launchpad::dump()
+std::string Launchpad::dump()
 {
-    std::cout << "================== Channels ==================\n";
+    std::ostringstream out;
+    out << "================== Channels ==================\n";
 
     for (Group& group : groups)
     {
         float panLevel = group.getPanLevel();
         bool showPan = panLevel < -0.05f || panLevel > 0.05f;
-        std::cout << std::format("{} {:<12s} {} {} vol: {:<3.0f}  {}\n",
+        out << std::format("{} {:<12s} {} {} vol: {:<3.0f}  {:<13s}\n",
             &group == &getCurrentGroup() ? ">" : " ",
             group.getName(),
             group.isMuted() ? "[M]" : "   ",
             group.isPaused() ? "|| " : "   ",
             group.getVolume() * 100.f,
-            showPan ? std::format("pan: {:1.0f} {}",
-                std::abs(panLevel * 10.f),
-                panLevel > 0.f ? "right" : "left"
-            ) : ""
+            showPan
+                ? std::format("pan: {:1.0f} {}",
+                    std::abs(panLevel * 10.f),
+                    panLevel > 0.f ? "right" : "left"
+                )
+                : ""
         );
     }
 
-    std::cout << "=================== Sounds ===================\n";
+    out << "=================== Sounds ===================\n";
 
     for (char key : soundKeys)
     {
         Sound& sound = sounds.at(key);
 
-        std::cout << std::format("{} {}  {}\n",
+        out << std::format("{} {}  {:<41s}\n",
             sound.isPlaying() ? "~" : " ",
             key,
             sound.getName());
     }
 
-    std::cout << std::flush;
+    return out.str();
 }
 
 
