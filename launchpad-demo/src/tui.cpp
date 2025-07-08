@@ -156,7 +156,7 @@ void printHelp()
         << "    Press any key to go back to Launchpad     "
         << CLEAR_BELOW_CURSOR;
 
-    std::cout << buffer.str();
+    std::cout << buffer.str() << std::flush;
 
     getch();
 }

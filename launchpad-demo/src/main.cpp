@@ -15,7 +15,7 @@ void printLaunchpadUI(Launchpad& launchpad)
         << "==============================================\n"
         << "               Press ? for help               ";
 
-    std::cout << buffer.str();
+    std::cout << buffer.str() << std::flush;
 }
 
 void mainLoop(Launchpad& launchpad)
